@@ -16,3 +16,13 @@ For Frontend I am using ReactJS and for Backend I am using GoLang.
 
 # Setting up communication
 
+In this part we will be implementing a basic WebSocket server which will listen for messages and write them back to via the same websocket.
+
+## Setting up backend WebSocket server
+
+What are we using: **Gorilla web toolkit**
+- This toolkit provides useful packages for writing HTTP-based applications.
+- In this we will be using **gorilla/websockets** to setup our websocket server
+
+
+
