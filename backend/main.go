@@ -14,5 +14,7 @@ func setupRoutes()  {
 
 func main() {
 	setupRoutes()
+	fmt.Println("Starting Server...")
+	fmt.Println("Output at: ", "http://localhost:8080")
 	http.ListenAndServe(":8080",nil)
 }
