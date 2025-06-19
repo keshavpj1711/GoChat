@@ -24,5 +24,30 @@ What are we using: **Gorilla web toolkit**
 - This toolkit provides useful packages for writing HTTP-based applications.
 - In this we will be using **gorilla/websockets** to setup our websocket server
 
+Adding it as dependency
+```bash
+go get github.com/gorilla/websocket
+```
 
+## Web Socket Protocol 
 
+- WebSockets offer us duplex communication from a non trusted to a server that we own across a TCP socket connection. 
+- This means that instead of continuously polling our server for updates and having to perform TCP handshakes every time we poll, we can maintain a single TCP socket connection and then send and listen to message on that.
+
+> This reduces the network overhead by a huge amount, which is the main deal for any real time application and helps maintain incredible amount of clients on a single server instance.
+
+### The Cons ⚠️
+
+- As soons as you introduce state(i.e. memory of each connection), it becomes more complex with regards to scaling up your app across multiple instances.
+  - Why? because now the server needs to remember things about a specific connection.
+
+> Now scaling up means you **run multiple copies of your app** so when your app grows you usually run many copies of it on different servers or containers
+
+- So in order to solve this issue that comes with scaling up, we consider options like storing your state in message brokers(like Redis Pub/Sub, Kafka), or in db/mem caches(Redis or Memcached) that can scale in parallel with your application instances.
+  - This adds complexity.
+
+## Implementation 
+
+First we create a new endpoint and then upgrade the connection to long lasting WebSocket connection.
+
+## 
