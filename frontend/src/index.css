@@ -1,2 +1,13 @@
 @import "tailwindcss";
 
+@theme {
+  --color-smokyBlack-50: #100B00;
+  --color-yellowGreen-50: #85CB33;
+  --color-nyanza-50: #EFFFC8;
+  --color-ashGray-50: #A5CBC3;
+  --color-prussianBlue-50: #13293D;
+  --color-lapisLazuli-50: 008494;
+  --color-cerulean-50: #247BA0;
+  --color-celestialBlue-50: #1B98E0;
+  --color-aliceBlue-50: #E8F1F2;
+}
