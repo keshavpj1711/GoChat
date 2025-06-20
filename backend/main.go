@@ -10,22 +10,32 @@ import (
 
 
 // defining our websocket endpoint
-func serveWs(w http.ResponseWriter, r *http.Request) {
-	fmt.Println(r.Host)
+func serveWs(pool *websocket.Pool, w http.ResponseWriter, r *http.Request) {
+	fmt.Println("WebSocket Endpoint Hit")
 
 	// upgrade conn to websocket conn
-	ws, err := websocket.Upgrade(w, r)
+	conn, err := websocket.Upgrade(w, r)
 	if err != nil {
-		log.Println(err)
+		log.Println(w, err)
 	}
-	// listen for new msgs coming indefinitely thru our websocket conn
-	go websocket.Writer(ws)
-	websocket.Reader(ws)
+	
+	client := &websocket.Client{
+		Conn: conn,
+		Pool: pool,
+	}
+
+	pool.Register <- client
+	client.Read()
 }
 
 func setupRoutes() {
+	pool := websocket.NewPool()
+	go pool.Start()
+
 	// Only handling the websocket connection route
-	http.HandleFunc("/ws", serveWs)
+	http.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {
+		serveWs(pool, w, r)
+	})
 }
 
 func main() {
