@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { connect, sendMsg } from "../api";
 
-const Connection = () => {
+const Connection = ({estbConn}) => {
   const [input, setInput] = useState("")
 
-  function handleClick() {
+  async function handleClick() {
     // console.log(input)
 
-    connect()
+    await estbConn()
 
     // Now here we can open the websocket connection
     sendMsg(input)
