@@ -8,10 +8,9 @@ import (
 	"github.com/gorilla/websocket"
 )
 
-
 // defining an upgrader
 var upgrader = websocket.Upgrader{
-	ReadBufferSize: 1024,
+	ReadBufferSize:  1024,
 	WriteBufferSize: 1024,
 
 	// checking the origin of our conn
@@ -23,13 +22,12 @@ var upgrader = websocket.Upgrader{
 	},
 }
 
-
 // A reader to listen for new messages being sent to our websocket endpoint
-func reader(conn *websocket.Conn)  {
+func reader(conn *websocket.Conn) {
 	for {
 		// read in a message
 		msgType, p, err := conn.ReadMessage()
-		
+
 		// checking for any errors
 		if err != nil {
 			log.Println(err)
@@ -59,8 +57,8 @@ func serveWs(w http.ResponseWriter, r *http.Request) {
 	reader(ws)
 }
 
-func setupRoutes()  {
-	// 
+func setupRoutes() {
+	//
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "Simple Server")
 	})
@@ -71,6 +69,6 @@ func setupRoutes()  {
 func main() {
 	fmt.Println("Starting Server...")
 	setupRoutes()
-	fmt.Println("Output at: ", "http://localhost:8080")
-	http.ListenAndServe(":8080",nil)
+	fmt.Println("Output at: ", "http://localhost:3000")
+	http.ListenAndServe(":3000", nil)
 }
