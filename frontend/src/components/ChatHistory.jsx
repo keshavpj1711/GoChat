@@ -1,3 +1,5 @@
+import Message from "./Message";
+
 const ChatHistory = ({ messages }) => {
   
   return (
@@ -11,7 +13,7 @@ const ChatHistory = ({ messages }) => {
           {messages.map((msg, index) => (
             <div className="text-white"
             key={index}>
-              {msg}
+              <Message message={msg}/>
             </div>
           ))}
         </div>
