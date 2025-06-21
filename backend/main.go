@@ -8,7 +8,6 @@ import (
 	"github.com/keshavpj1711/GoChat/pkg/websocket"
 )
 
-
 // defining our websocket endpoint
 func serveWs(pool *websocket.Pool, w http.ResponseWriter, r *http.Request) {
 	fmt.Println("WebSocket Endpoint Hit")
@@ -17,8 +16,13 @@ func serveWs(pool *websocket.Pool, w http.ResponseWriter, r *http.Request) {
 	conn, err := websocket.Upgrade(w, r)
 	if err != nil {
 		log.Println(w, err)
+
+		// Gracefull handling any failed upgrade requests
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte("This endpoint is for WebSocket connections only"))
+		return
 	}
-	
+
 	client := &websocket.Client{
 		Conn: conn,
 		Pool: pool,
