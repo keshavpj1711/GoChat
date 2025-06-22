@@ -50,4 +50,100 @@ go get github.com/gorilla/websocket
 
 First we create a new endpoint and then upgrade the connection to long lasting WebSocket connection.
 
-## 
+Thankfully, the gorilla/websocket package features the functionality for upgrading a HTTP connection to a WebSocket connection.
+
+### Creating a WebSocket Endpoint
+
+Creating a new endpoint `/ws` and converting from a std `http` endpoint to `/ws`.
+
+This endpoint will do 3 things: 
+- Check the origin of incoming HTTP request
+  - return `true` for every client
+    - since as of now we open to each client.
+- Attempt to upgrade the connection using a defined `upgrader`
+- Listen and Echo messages: so once the websocket conn is open
+  - the server waits for msgs from clients
+  - prints the msg to logs, for us to see
+  - echo the msg back to same conn
+  > helps to test the connection works both ways
+
+<details>
+<summary>Code Snippets</summary>
+  
+### Websocket upgrader
+
+```go
+// This is like the handshake in WebSockets, and
+// in Go we specifically use this to turn a normal HTTP req to a websocket conn
+var upgrader = websocket.Upgrader{ 
+  // Reading and writing buffer sizes
+  ReadBufferSize: 1024,
+  WriteBufferSize: 1024,
+  
+  // Allow all client to connect for now
+  // Similar to CORS in Node.js -- how you'd allow react(localhost:5000 in this case) to talk to your backend
+  CheckOrigin: func(r *http.Request) bool { return true },
+}
+
+```
+
+### To handle the websocket connection
+
+```go
+// The function that handles requests to /ws route
+func serveWs(w http.ResponseWriter, r *http.Request) {
+  // this is where we finally use tht upgrader to upgrade the conn
+  ws, err := upgrader.Upgrade(w, r, nil)
+  // Handles the error
+
+  // start listening for messages on the websocket conn using reader
+  reader(ws)
+}
+```
+
+### Reader: one that reads every msg to ws conn and echos it back
+
+```go
+func Reader(conn *websocket.Conn) {
+  for {
+    // Read a message from the WebSocket
+    messageType, p, err := conn.ReadMessage()
+    if err != nil {
+      log.Println(err)
+      return
+    }
+    
+    // Print the message we received
+    fmt.Println(string(p))
+
+    // Echo the message back to the same connection
+    if err := conn.WriteMessage(messageType, p); err != nil {
+      log.Println(err)
+      return
+    }
+  }
+}
+```
+
+</details>
+
+
+### Creating the React WebSocket Client
+
+
+
+## Handling Multiple Clients
+
+In simple terms what we need to do is whenever a new connection is made, we'll have to add them to a pool of existing connections and ensure that every time a message is sent, everyone in that pool recieves that message.
+
+### Using Channels 
+
+- For each of these concurrent connections a **new `goroutine` is spun up** for that duration of that connection. 
+
+- This means that we have to worry about communication across these concurrent `goroutines` and ensure that whatever we are doing, is thread-safe. 
+
+- So, when we are implementing a **Pool** structure further down the line, we’ll have to consider either using a `sync.Mutex` to mutually exclude `goroutines` from simultaneously accessing/modifying our data, or we can use `channels`.
+
+> Here i think we'll be better off using `channels` and using them to communicate in a safe fashion across these multiple concurrent `goroutines`, since i am most comfortable with that 😅
+
+
