@@ -182,3 +182,30 @@ In simple terms what we need to do is whenever a new connection is made, we'll h
 > Here i think we'll be better off using `channels` and using them to communicate in a safe fashion across these multiple concurrent `goroutines`, since i am most comfortable with that 😅
 
 
+# 🐳 Docker Deployment
+
+## Why Docker for GoChat Backend?
+
+Docker provides several key benefits for Go applications:
+
+- **Consistent deployments** - Eliminates "works on my machine" issues
+- **Environment isolation** - No conflicts with host system dependencies
+- **Easy scaling** - Spin up multiple container instances
+- **Simplified deployment** - Single command deployment to any Docker-supported platform
+- **Static binary advantage** - Go's compiled binaries work perfectly in minimal containers
+- **Security** - Non-root execution, minimal attack surface
+
+
+## Build and Run with Docker
+
+```bash
+cd backend
+docker build -t gochat-backend .
+docker run -p 3000:3000 gochat-backend
+```
+
+The Dockerfile uses a **multi-stage build** for optimal image size:
+
+- **Stage 1**: Build the Go binary in a full Go environment (~300MB)
+- **Stage 2**: Copy only the binary to a minimal Alpine Linux image
+- **Result**: ~15-20MB production-ready image
