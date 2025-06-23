@@ -298,6 +298,8 @@ To see the process of how I created this project from scratch checkout: [Click H
 
 MIT License - see [LICENSE](LICENSE) file for details.
 
+---
+
 <div align="center">
 
 **GoChat: Where Go's concurrency meets real-time group communication**
@@ -306,5 +308,5 @@ MIT License - see [LICENSE](LICENSE) file for details.
 
 **[⭐ Star this repo](https://github.com/keshavpj1711/GoChat)** if GoChat inspired you to explore Go's concurrency!
 
+  <div style="text-align: center">⁂</div>
 </div>
-<div style="text-align: center">⁂</div>
